@@ -1,0 +1,116 @@
+program device_ipc;
+
+// Array sizes.
+const uint16 ARRAY_MAX_BUF = 256;
+const uint8 ARRAY_SIZE_SETTINGS_DI = 23;
+const uint16 ARRAY_SIZE_FULL_SETTINGS_DO = 273;
+const uint16 ARRAY_SIZE_SETTINGS_DO = 256;
+const uint16 ARRAY_SIZE_FULL_BINDING = 800;
+const uint16 ARRAY_SIZE_BINDING = 256;
+const uint8 ARRAY_SIZE_ONE_BINDING = 10;
+const uint16 ARRAY_SIZE_LOG = 256;
+const uint16 ARRAY_SIZE_SETTINGS = 256;
+const uint16 ARRAY_SIZE_FULL_DESC = 10240;
+const uint16 ARRAY_SIZE_DESC = 256;
+const uint16 ARRAY_SIZE_ONE_DESC = 128;
+const uint16 ARRAY_SIZE_INTERNAL_DATA = 128;
+const uint8 ARRAY_SIZE_IO = 20;
+const uint8 ARRAY_SIZE_DI_DO = 10;
+const uint8 ARRAY_SIZE_GEN_INFO = 10;
+const uint8 ARRAY_SIZE_MODE_POWER = 6;
+const uint8 ARRAY_SIZE_DO = 10;
+const uint8 ARRAY_SIZE_GOOSE = 10;
+const uint8 ARRAY_SIZE_FACTORY_INF_SET = 5;
+const uint8 ARRAY_SIZE_MODBUS_SET = 5;
+const uint8 ARRAY_SIZE_NET_SET = 21;
+const uint8 ARRAY_SIZE_TIME_SET = 21;
+const uint8 ARRAY_SIZE_GOOSE_SET = 22;
+const uint8 ARRAY_SIZE_UI_SET = 82;
+const uint8 ARRAY_SIZE_EVENTS_SET = 40;
+const uint8 ARRAY_SIZE_LED_STATE = 1;
+const uint8 ARRAY_SIZE_USER_PASS_SET = 4;
+const uint8 ARRAY_DEV_STATE = 8;
+const uint8 array_size_lgos = 32;
+
+// Fixed-size payload types.
+type Array_max_buf = uint8[ARRAY_MAX_BUF];
+type Array_settings_DI = uint8[ARRAY_SIZE_SETTINGS_DI];
+type Array_settings_DO = uint8[ARRAY_SIZE_SETTINGS_DO];
+type Array_settings_DO_full = uint8[ARRAY_SIZE_FULL_SETTINGS_DO];
+type Array_one_binding = uint8[ARRAY_SIZE_ONE_BINDING];
+type Array_bindings = uint8[ARRAY_SIZE_BINDING];
+type Array_full_bindings = uint8[ARRAY_SIZE_FULL_BINDING];
+type Array_log = uint8[ARRAY_SIZE_LOG];
+type Array_settings = uint8[ARRAY_SIZE_SETTINGS];
+type Array_internal_data = uint8[ARRAY_SIZE_INTERNAL_DATA];
+type Array_full_desc = uint8[ARRAY_SIZE_FULL_DESC];
+type Array_desc = uint8[ARRAY_SIZE_DESC];
+type Array_one_desc = uint8[ARRAY_SIZE_ONE_DESC];
+type Array_io = uint8[ARRAY_SIZE_IO];
+type Array_di_do = uint8[ARRAY_SIZE_DI_DO];
+type Array_do_com = uint8[ARRAY_SIZE_DO];
+type Array_goose = uint8[ARRAY_SIZE_GOOSE];
+type Array_gen_info = uint8[ARRAY_SIZE_GEN_INFO];
+type Array_mode_power = uint8[ARRAY_SIZE_MODE_POWER];
+type Array_factory_inf_set = uint8[ARRAY_SIZE_FACTORY_INF_SET];
+type Array_modbus_set = uint8[ARRAY_SIZE_MODBUS_SET];
+type Array_net_set = uint8[ARRAY_SIZE_NET_SET];
+type Array_time_set = uint8[ARRAY_SIZE_TIME_SET];
+type Array_goose_set = uint8[ARRAY_SIZE_GOOSE_SET];
+type Array_ui_set = uint8[ARRAY_SIZE_UI_SET];
+type Array_events_set = uint8[ARRAY_SIZE_EVENTS_SET];
+type Array_led_state = uint8[ARRAY_SIZE_LED_STATE];
+type Array_user_pass_set = uint8[ARRAY_SIZE_USER_PASS_SET];
+type Array_dev_state = uint8[ARRAY_DEV_STATE];
+type array_lgos = uint8[array_size_lgos];
+
+// A9 -> M4; handlers run on M4.
+interface A9_to_M4 {
+    send_from_A9_to_M4_one_desc(in Array_one_desc array_one_desc, in uint8 desc_type, in uint8 num) -> uint8;
+    oneway send_from_A9_to_M4_desc(in Array_desc array_desc, in uint8 desc_set_number, in uint8 desc_type);
+    oneway send_from_A9_to_M4_internal_data(in Array_internal_data array_internal_data);
+    send_from_A9_to_M4_log(in Array_log array_log, in uint8 log_set_number) -> uint8;
+    ask_from_A9_to_M4_log(out Array_log array_log, in uint8 log_set_number) -> uint8;
+    send_from_A9_to_M4_settings_DI(in Array_settings_DI array_settings_DI) -> uint8;
+    send_from_A9_to_M4_settings_DO(in Array_settings_DO array_settings_DO, in uint8 settings_set_number) -> uint8;
+    send_from_A9_to_M4_one_binding(in Array_one_binding array_one_binding, in uint8 bind_type, in uint8 do_num) -> uint8;
+    oneway send_from_A9_to_M4_bindings(in Array_bindings array_bindings, in uint8 bindings_set_number, in uint8 bind_type);
+    send_from_A9_to_M4_settings(in Array_settings array_settings, in uint8 settings_set_number) -> uint8;
+    ask_from_A9_to_M4_mode_power_state(out Array_mode_power array_mode_power) -> uint8;
+    ask_from_A9_to_M4_IO_state(out Array_io array_io, in uint8 io_type) -> uint8;
+    ask_from_A9_to_M4_gen_info_state(out Array_gen_info array_gen_info) -> uint8;
+    ask_from_A9_to_M4_LED_state(out Array_led_state led_state) -> uint8;
+    send_from_A9_to_M4_RstTstInd(in uint8 rst_tst_ind) -> uint8;
+    send_from_A9_to_M4_regime(in uint8 regime) -> uint8;
+    oneway send_from_A9_to_M4_mode(in uint8 mode);
+    send_from_A9_to_M4_DO_com(in Array_do_com array_do_com) -> uint8;
+    send_from_A9_to_M4_GOOSE_com(in Array_goose array_goose_com) -> uint8;
+    oneway send_from_A9_to_M4_GOOSE_state(in Array_goose array_goose, in uint8 goose_type, in uint8 goose_mode);
+    send_from_A9_to_M4_FactoryInf_set(in Array_factory_inf_set array_factory_info_set) -> uint8;
+    send_from_A9_to_M4_Modbus_set(in Array_modbus_set array_modbus_set) -> uint8;
+    send_from_A9_to_M4_Net_set(in Array_net_set array_net_set) -> uint8;
+    send_from_A9_to_M4_Time_set(in Array_time_set array_time_set) -> uint8;
+    send_from_A9_to_M4_Goose_set(in Array_goose_set array_goose_set) -> uint8;
+    send_from_A9_to_M4_UI_set(in Array_ui_set array_ui_set) -> uint8;
+    send_from_A9_to_M4_Events_set(in Array_events_set array_events_set) -> uint8;
+    oneway send_from_A9_to_M4_User_Pass_set(in Array_user_pass_set array_user_pass);
+    oneway send_from_A9_to_M4_status(in uint8 status, in uint8 test_mode);
+    oneway send_from_A9_to_M4_rev_info(in uint8 distro_rev, in uint8 a9_rev, in uint16 model_sw_rev);
+    oneway send_from_A9_to_M4_events(in uint8 events_group, in uint8 event_code);
+    oneway send_from_A9_to_M4_bat_state(in uint8 bat);
+    oneway send_from_A9_to_M4_lgos_state(in array_lgos lgos_array_state);
+}
+
+// M4 -> A9; handlers run on A9.
+interface M4_to_A9 {
+    oneway send_from_M4_to_A9_log(in Array_log array_log, in uint8 log_set_number);
+    oneway send_from_M4_to_A9_settings(in Array_settings array_settings, in uint8 settings_set_number);
+    oneway send_from_M4_to_A9_one_setting(in uint8 one_setting, in uint16 setting_number);
+    oneway send_from_M4_to_A9_internal_data(in Array_internal_data array_internal_data);
+    oneway send_from_M4_to_A9_time(in uint16 year, in uint8 month, in uint8 day, in uint8 hour, in uint8 minute, in uint8 second);
+    oneway send_from_M4_to_A9_GOOSE_com(in Array_goose array_goose_com, in uint8 goose_mode);
+    oneway send_from_M4_to_A9_regime(in uint8 regime);
+    oneway send_from_M4_to_A9_mode(in uint8 mode);
+    oneway send_from_M4_to_A9_IO_state(in Array_di_do array_di_do, in uint8 io_type);
+    oneway send_from_M4_to_A9_dev_state(in Array_dev_state array_dev_atate);
+}
