@@ -9,6 +9,7 @@ const uint16 ARRAY_SIZE_FULL_BINDING = 800;
 const uint16 ARRAY_SIZE_BINDING = 256;
 const uint8 ARRAY_SIZE_ONE_BINDING = 10;
 const uint16 ARRAY_SIZE_LOG = 256;
+const uint16 ARRAY_SIZE_FULL_LOG = 12288;
 const uint16 ARRAY_SIZE_SETTINGS = 256;
 const uint16 ARRAY_SIZE_FULL_DESC = 10240;
 const uint16 ARRAY_SIZE_DESC = 256;
@@ -41,6 +42,7 @@ type Array_one_binding = uint8[ARRAY_SIZE_ONE_BINDING];
 type Array_bindings = uint8[ARRAY_SIZE_BINDING];
 type Array_full_bindings = uint8[ARRAY_SIZE_FULL_BINDING];
 type Array_log = uint8[ARRAY_SIZE_LOG];
+type Array_full_log = uint8[ARRAY_SIZE_FULL_LOG];
 type Array_settings = uint8[ARRAY_SIZE_SETTINGS];
 type Array_internal_data = uint8[ARRAY_SIZE_INTERNAL_DATA];
 type Array_full_desc = uint8[ARRAY_SIZE_FULL_DESC];
@@ -103,7 +105,7 @@ interface A9_to_M4 {
 
 // M4 -> A9; handlers run on A9.
 interface M4_to_A9 {
-    oneway send_from_M4_to_A9_log(in Array_log array_log, in uint8 log_set_number);
+    oneway send_from_M4_to_A9_log(in Array_full_log array_log);
     oneway send_from_M4_to_A9_settings(in Array_settings array_settings, in uint8 settings_set_number);
     oneway send_from_M4_to_A9_one_setting(in uint8 one_setting, in uint16 setting_number);
     oneway send_from_M4_to_A9_internal_data(in Array_internal_data array_internal_data);
